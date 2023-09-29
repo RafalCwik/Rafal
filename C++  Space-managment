@@ -1,0 +1,181 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+#include <iterator>
+#include <numeric>
+
+class VirtualSpace {
+private:
+    std::vector<bool> resources;
+    std::vector<int> reservedResources;
+
+public:
+    VirtualSpace(int size) : resources(size, false) {}
+
+    bool reserveResource(int resourceId) {
+        if (isValidResource(resourceId)) {
+            if (!resources[resourceId]) {
+                resources[resourceId] = true;
+                reservedResources.push_back(resourceId);
+                std::cout << "Resource " << resourceId << " reserved successfully." << std::endl;
+                return true;
+            } else {
+                std::cout << "Resource " << resourceId << " is already reserved." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid resource ID." << std::endl;
+        }
+        return false;
+    }
+
+    bool releaseResource(int resourceId) {
+        if (isValidResource(resourceId)) {
+            if (resources[resourceId]) {
+                resources[resourceId] = false;
+                reservedResources.erase(std::remove(reservedResources.begin(), reservedResources.end(), resourceId),
+                                         reservedResources.end());
+                std::cout << "Resource " << resourceId << " released successfully." << std::endl;
+                return true;
+            } else {
+                std::cout << "Resource " << resourceId << " is not reserved." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid resource ID." << std::endl;
+        }
+        return false;
+    }
+
+    void showAvailability() const {
+        std::cout << "Resource Availability:" << std::endl;
+        for (int i = 0; i < resources.size(); ++i) {
+            std::cout << "Resource " << i << ": " << (resources[i] ? "Reserved" : "Available") << std::endl;
+        }
+    }
+
+    void addResources(int count) {
+        resources.insert(resources.end(), count, false);
+        std::cout << count << " resources added successfully." << std::endl;
+    }
+
+    int countAvailableResources() const {
+        return std::count(resources.begin(), resources.end(), false);
+    }
+
+    void resetSpace() {
+        std::fill(resources.begin(), resources.end(), false);
+        reservedResources.clear();
+        std::cout << "Virtual space reset successfully." << std::endl;
+    }
+
+    void generateReport() const {
+        std::cout << "\nVirtual Space Report:" << std::endl;
+        std::cout << "Total Resources: " << resources.size() << std::endl;
+        std::cout << "Reserved Resources: " << reservedResources.size() << std::endl;
+        std::cout << "Available Resources: " << countAvailableResources() << std::endl;
+    }
+
+    void moveResource(int sourceId, int destinationId) {
+        if (isValidResource(sourceId) && isValidResource(destinationId)) {
+            if (resources[sourceId]) {
+                resources[sourceId] = false;
+                resources[destinationId] = true;
+                std::cout << "Resource " << sourceId << " moved to " << destinationId << " successfully." << std::endl;
+            } else {
+                std::cout << "Resource " << sourceId << " is not reserved." << std::endl;
+            }
+        } else {
+            std::cout << "Invalid resource ID." << std::endl;
+        }
+    }
+
+    bool checkResourceStatus(int resourceId) const {
+        if (isValidResource(resourceId)) {
+            return resources[resourceId];
+        } else {
+            std::cout << "Invalid resource ID." << std::endl;
+            return false;
+        }
+    }
+
+    void swapReservedAvailable() {
+        std::for_each(reservedResources.begin(), reservedResources.end(),
+                      [this](int resourceId) { resources[resourceId] = false; });
+        reservedResources.clear();
+
+        for (int i = 0; i < resources.size(); ++i) {
+            if (!resources[i]) {
+                reservedResources.push_back(i);
+                resources[i] = true;
+            }
+        }
+
+        std::cout << "Reserved and available resources swapped successfully." << std::endl;
+    }
+
+    void generateUniqueIds() {
+        std::iota(reservedResources.begin(), reservedResources.end(), 0);
+        std::random_shuffle(reservedResources.begin(), reservedResources.end());
+        std::cout << "Unique IDs generated for reserved resources." << std::endl;
+    }
+
+private:
+    bool isValidResource(int resourceId) const {
+        return resourceId >= 0 && resourceId < resources.size();
+    }
+};
+
+int main() {
+    int virtualSpaceSize;
+    std::cout << "Enter the size of the virtual space: ";
+    std::cin >> virtualSpaceSize;
+
+    VirtualSpace virtualSpace(virtualSpaceSize);
+
+    while (true) {
+        std::cout << "\nVirtual Space Management Menu:" << std::endl;
+        std::cout << "1. Reserve Resource" << std::endl;
+        std::cout << "2. Release Resource" << std::endl;
+        std::cout << "3. Show Resource Availability" << std::endl;
+        std::cout << "4. Add Resources" << std::endl;
+        std::cout << "5. Count Available Resources" << std::endl;
+        std::cout << "6. Reset Virtual Space" << std::endl;
+        std::cout << "7. Generate Report" << std::endl;
+        std::cout << "8. Move Resource" << std::endl;
+        std::cout << "9. Check Resource Status" << std::endl;
+        std::cout << "10. Swap Reserved and Available Resources" << std::endl;
+        std::cout << "11. Generate Unique IDs for Reserved Resources" << std::endl;
+        std::cout << "12. Exit" << std::endl;
+
+        int choice;
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+
+        switch (choice) {
+            case 1: {
+                int resourceId;
+                std::cout << "Enter the resource ID to reserve: ";
+                std::cin >> resourceId;
+                virtualSpace.reserveResource(resourceId);
+                break;
+            }
+            case 2: {
+                int resourceId;
+                std::cout << "Enter the resource ID to release: ";
+                std::cin >> resourceId;
+                virtualSpace.releaseResource(resourceId);
+                break;
+            }
+            case 3:
+                virtualSpace.showAvailability();
+                break;
+            case 4: {
+                int count;
+                std::cout << "Enter the number of resources to add: ";
+                std::cin >> count;
+                virtualSpace.addResources(count);
+                break;
+            }
+            case 5:
+                std::cout << "Number of available resources: " << virtualSpace.countAvailableResources() << std::endl;
+                break;
+            case
