@@ -1,0 +1,13 @@
+import random
+
+# Ustalamy zbiór liczb od 1 do 35
+zbior_liczb = set(range(1, 36))
+
+# Wykluczamy podane liczby
+wykluczone_liczby = {10, 11, 20, 22, 30, 33, 6, 8, 16, 23}
+zbior_liczb = zbior_liczb - wykluczone_liczby
+
+# Losujemy 5 unikalnych liczb
+wylosowane_liczby = random.sample(zbior_liczb, 5)
+
+print("Wylosowane liczby:", wylosowane_liczby)
