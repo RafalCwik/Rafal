@@ -1,0 +1,31 @@
+class Human:
+    def __init__(self, age, weight, height, name, is_male):
+        self.age = age
+        self.weight = weight
+        self.height = height
+        self.name = name
+        self.is_male = is_male
+
+    def getAge(self):
+        return self.age
+
+    def getWeight(self):
+        return self.weight
+
+    def getHeight(self):
+        return self.height
+
+    def getName(self):
+        return self.name
+
+    def isMale(self):
+        return self.is_male
+
+# Przykład użycia klasy Human
+person = Human(age=30, weight=70, height=175, name="John", is_male=True)
+
+print(f"Imię: {person.getName()}")
+print(f"Wiek: {person.getAge()} lat")
+print(f"Waga: {person.getWeight()} kg")
+print(f"Wzrost: {person.getHeight()} cm")
+print("Płeć: Mężczyzna" if person.isMale() else "Płeć: Kobieta")
